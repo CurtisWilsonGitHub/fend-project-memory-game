@@ -1,8 +1,31 @@
 const deck = document.getElementById('play_area');
-let card_array = [];
+let match_array = [];
+
+
+
+
 /*
  * Create a list that holds all of your cards
  */
+
+ const cards_array = [
+    "fa fa-diamond",
+    "fa fa-diamond",
+    "fa fa-paper-plane-o",
+    "fa fa-paper-plane-o",
+    "fa fa-anchor",
+    "fa fa-anchor",
+    "fa fa-bolt",
+    "fa fa-bolt",
+    "fa fa-cube",
+    "fa fa-cube",
+    "fa fa-leaf",
+    "fa fa-leaf",
+    "fa fa-bicycle",
+    "fa fa-bicycle",
+    "fa fa-bomb",
+    "fa fa-bomb"
+  ];
 
 
 /*
@@ -14,10 +37,7 @@ let card_array = [];
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 
-function correct_animation(card_array){
-  card_array[0].classList.toggle('match_correct');
-  card_array[1].classList.toggle('match_correct');
-}
+
 
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
@@ -33,29 +53,43 @@ function shuffle(array) {
     return array;
 }
 
+
+function board_maker(cards){
+  for (let i = 0; i < cards.length; i++){
+    let class_name = cards[i];
+    let card_node = document.createElement("li");
+    card_node.className="card";
+    let card_face = document.createElement("i");
+    card_face.className = cards[i];
+    card_node.appendChild(card_face);
+    document.getElementById('play_area').appendChild(card_node);
+  }
+}
+
 function show_card(){
   event.target.className = "card open show";
 }
 
-function match_maker(card,card_array){
-  card_array.push(card);
-  if(card_array.length == 2){
-    let card_one = card_array[0].children;
-    let card_two = card_array[1].children;
-    console.log(card_one[0].className);
-    console.log(card_two[0].className);
+function match_maker(card,match_array){
+  match_array.push(card);
+  if(match_array.length == 2){
+
+    let card_one = match_array[0].children;
+    let card_two = match_array[1].children;
 
     if(card_one[0].className == card_two[0].className){
-      console.log('true');
+
       card_one[0].parentElement.className="card match";
       card_two[0].parentElement.className="card match";
-      correct_animation(card_array);
+      correct_animation(match_array);
+
     } else{
-      console.log('false');
+
       card_one[0].parentElement.className="card";
       card_two[0].parentElement.className="card";
+
     }
-    card_array.length = 0;
+    match_array.length = 0;
   }
 }
 
@@ -74,7 +108,24 @@ deck.addEventListener('click',function(e){
   if(e.target && e.target.matches("li.card")){
     show_card();
     setTimeout(function(){
-      match_maker(e.target, card_array)
+      match_maker(e.target, match_array)
     },500);
   }
 });
+
+
+/*
+ * animation functions
+ */
+
+ function correct_animation(match_array){
+   match_array[0].classList.toggle('match_correct');
+   match_array[1].classList.toggle('match_correct');
+ }
+
+
+ /*
+  * initial board setup
+  */
+
+  board_maker(shuffle(cards_array));
