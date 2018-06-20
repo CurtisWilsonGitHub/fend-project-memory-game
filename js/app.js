@@ -13,6 +13,12 @@ let card_array = [];
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
+
+function correct_animation(card_array){
+  card_array[0].classList.toggle('match_correct');
+  card_array[1].classList.toggle('match_correct');
+}
+
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -43,6 +49,7 @@ function match_maker(card,card_array){
       console.log('true');
       card_one[0].parentElement.className="card match";
       card_two[0].parentElement.className="card match";
+      correct_animation(card_array);
     } else{
       console.log('false');
       card_one[0].parentElement.className="card";
