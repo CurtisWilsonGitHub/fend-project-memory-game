@@ -1,4 +1,10 @@
+/*
+ * code related to the modal was modified from const modal = document.getElementById('winModal');
+  */
+
 const deck = document.getElementById('play_area');
+const modal = document.getElementById('winModal');
+const span = document.getElementsByClassName('close')[0];
 let match_array = [];
 let moves = 0;
 let timerActive = false;
@@ -123,7 +129,7 @@ function updateScore(moves){
 /*
  *function that keeps tracks of time. Activated by startTimer function
  */
- 
+
 function timer(){
   if( sec === 60){
     minute += 1;
@@ -167,7 +173,12 @@ deck.addEventListener('click',function(e){
       match_maker(e.target, match_array)
     },500);
   }
+  modal.style.display="block";
 });
+
+span.onclick= function(){
+  modal.style.display = "none";
+}
 
 
 /*
