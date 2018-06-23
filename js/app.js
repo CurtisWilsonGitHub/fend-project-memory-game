@@ -1,7 +1,9 @@
 const deck = document.getElementById('play_area');
 let match_array = [];
-
-
+let moves = 0;
+let timerActive = false;
+let sec = 0;
+let minute = 0;
 
 
 /*
@@ -53,6 +55,10 @@ function shuffle(array) {
     return array;
 }
 
+/*
+ * Takes cards_array and create a play area by creating a new 'li' element
+ * and 'i' element with the appropriate class name taken from the class_array
+ */
 
 function board_maker(cards){
   for (let i = 0; i < cards.length; i++){
@@ -69,6 +75,11 @@ function board_maker(cards){
 function show_card(){
   event.target.className = "card open show";
 }
+
+
+/*
+ * function that takes an array of two cards and see if class matches
+ */
 
 function match_maker(card,match_array){
   match_array.push(card);
@@ -93,6 +104,47 @@ function match_maker(card,match_array){
   }
 }
 
+function updateMove(moves){
+  document.getElementById('move').textContent = moves;
+  updateScore(moves);
+}
+
+function updateScore(moves){
+  let element = document.getElementById('starUl');
+  let child = element.lastElementChild;
+
+  if(moves === 20 || moves === 30){
+    element.removeChild(child);
+  }
+
+}
+
+
+/*
+ *function that keeps tracks of time. Activated by startTimer function
+ */
+ 
+function timer(){
+  if( sec === 60){
+    minute += 1;
+    sec = 0;
+  }
+  else{
+    sec += 1;
+  }
+  document.getElementById('timer').textContent = "Timer:    " + minute + ":" + sec;
+  console.log(minute+":"+sec);
+}
+
+function startTimer(active){
+  if(!active){
+    setInterval(timer,1000);
+  }
+}
+
+
+
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -106,7 +158,11 @@ function match_maker(card,match_array){
 
 deck.addEventListener('click',function(e){
   if(e.target && e.target.matches("li.card")){
+    startTimer(timerActive);
+    timerActive = true;
     show_card();
+    moves ++;
+    updateMove(moves);
     setTimeout(function(){
       match_maker(e.target, match_array)
     },500);

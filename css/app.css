@@ -99,6 +99,13 @@ h1 {
     margin: 0 5px 0 0;
 }
 
+#timer{
+  margin: 0 5px 0 5px;
+  padding: 0;
+  display: inline-block;
+  text align: center;
+}
+
 .score-panel .stars li {
     list-style: none;
     display: inline-block;
