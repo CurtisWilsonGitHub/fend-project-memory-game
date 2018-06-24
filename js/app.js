@@ -10,7 +10,7 @@ let moves = 0;
 let timerActive = false;
 let sec = 0;
 let minute = 0;
-
+let matches = 0;
 
 /*
  * Create a list that holds all of your cards
@@ -99,7 +99,7 @@ function match_maker(card,match_array){
       card_one[0].parentElement.className="card match";
       card_two[0].parentElement.className="card match";
       correct_animation(match_array);
-
+      matches ++;
     } else{
 
       card_one[0].parentElement.className="card";
@@ -108,14 +108,18 @@ function match_maker(card,match_array){
     }
     match_array.length = 0;
   }
+  console.log(matches);
+  if(matches === 8){
+    winCondition(matches);
+  }
 }
 
-function updateMove(moves){
+function updateMove(){
   document.getElementById('move').textContent = moves;
   updateScore(moves);
 }
 
-function updateScore(moves){
+function updateScore(){
   let element = document.getElementById('starUl');
   let child = element.lastElementChild;
 
@@ -125,6 +129,20 @@ function updateScore(moves){
 
 }
 
+function finalScore(){
+  let element = document.getElementById('starFinal');
+  let child = element.lastElementChild;
+
+  if(moves === 20 || moves === 30){
+    element.removeChild(child);
+  }
+
+}
+
+function winCondition(){
+    modal.style.display="block";
+    finalScore(moves);
+}
 
 /*
  *function that keeps tracks of time. Activated by startTimer function
@@ -168,12 +186,12 @@ deck.addEventListener('click',function(e){
     timerActive = true;
     show_card();
     moves ++;
-    updateMove(moves);
+    updateMove();
     setTimeout(function(){
       match_maker(e.target, match_array)
-    },500);
+    },500);e
   }
-  modal.style.display="block";
+
 });
 
 span.onclick= function(){
