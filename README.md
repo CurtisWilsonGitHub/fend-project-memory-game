@@ -18,6 +18,6 @@ In order to run this program, simply clone it to a directory and use a web brows
 
 Technologies used in this program are:
 
-*HTML
-*CSS
-*JavaScript
+* HTML
+* CSS
+* JavaScript
