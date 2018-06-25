@@ -6,6 +6,7 @@ const deck = document.getElementById('play_area');
 const modal = document.getElementById('winModal');
 const span = document.getElementsByClassName('close')[0];
 const resetButton = document.getElementById('reset');
+const redoButton = document.getElementById('redo');
 let match_array = [];
 let moves = 0;
 let timerActive = false;
@@ -136,26 +137,31 @@ function updateMove(){
 }
 
 function updateScore(){
-  let element = document.getElementById('starUl');
-  let child = element.lastElementChild;
-
-  if(moves === 20 || moves === 30){
-    element.removeChild(child);
+  if(moves === 20){
+    document.getElementById('threeStar').style.display = 'none';
   }
-
+  if(moves === 30){
+    document.getElementById('twoStar').style.display = 'none';
+  }
 }
 
 function finalScore(){
-  let element = document.getElementById('starFinal');
-  let child = element.lastElementChild;
-
   if(moves >= 20){
-    element.removeChild(child);
+    document.getElementById('thirdStar').style.display = 'none';
     if(moves >= 30){
-      child = element.lastElementChild;
-      element.removeChild(child);
+      document.getElementById('secondStar').style.display = 'none';
     }
   }
+}
+
+function resetScore(){
+  moves = 0;
+  document.getElementById('thirdStar').style.display = 'block';
+  document.getElementById('secondStar').style.display = 'block';
+  document.getElementById('twoStar').style.display = 'block';
+  document.getElementById('threeStar').style.display = 'block';
+  document.getElementById('move').textContent = moves;
+  document.getElementById('timer').textContent = "Timer: 00:00";
 }
 
 function winCondition(){
@@ -227,7 +233,19 @@ deck.addEventListener('click',function(e){
 resetButton.addEventListener('click',function(e){
   deleteBoard();
   board_maker(shuffle(cards_array));
+  resetScore();
   modal.style.display = "none";
+});
+
+redoButton.addEventListener('click',function(e){
+  deleteBoard();
+  board_maker(shuffle(cards_array));
+  resetScore();
+  modal.style.display = "none";
+  timerActive = false;
+  timerStop();
+  match_array = [];
+  matches = 0;
 });
 
 span.onclick= function(){
