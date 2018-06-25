@@ -5,12 +5,15 @@
 const deck = document.getElementById('play_area');
 const modal = document.getElementById('winModal');
 const span = document.getElementsByClassName('close')[0];
+const resetButton = document.getElementById('reset');
 let match_array = [];
 let moves = 0;
 let timerActive = false;
 let sec = 0;
 let minute = 0;
 let matches = 0;
+let stopwatch;
+
 
 /*
  * Create a list that holds all of your cards
@@ -78,6 +81,13 @@ function board_maker(cards){
   }
 }
 
+function deleteBoard(){
+  while(deck.firstChild){
+    deck.removeChild(deck.firstChild);
+  }
+}
+
+
 function show_card(){
   event.target.className = "card open show";
 }
@@ -95,23 +105,29 @@ function match_maker(card,match_array){
     let card_two = match_array[1].children;
 
     if(card_one[0].className == card_two[0].className){
-
-      card_one[0].parentElement.className="card match";
-      card_two[0].parentElement.className="card match";
+      matchSucced(card_one,card_two);
       correct_animation(match_array);
       matches ++;
     } else{
-
-      card_one[0].parentElement.className="card";
-      card_two[0].parentElement.className="card";
-
+     matchFail(card_one,card_two);
     }
     match_array.length = 0;
   }
-  console.log(matches);
   if(matches === 8){
     winCondition(matches);
+    timerActive = false;
+    matches = 0;
   }
+}
+
+function matchSucced(card_one,card_two){
+  card_one[0].parentElement.className="card match";
+  card_two[0].parentElement.className="card match";
+}
+
+function matchFail(card_one,card_two){
+  card_one[0].parentElement.className="card";
+  card_two[0].parentElement.className="card";
 }
 
 function updateMove(){
@@ -133,19 +149,24 @@ function finalScore(){
   let element = document.getElementById('starFinal');
   let child = element.lastElementChild;
 
-  if(moves === 20 || moves === 30){
+  if(moves >= 20){
     element.removeChild(child);
+    if(moves >= 30){
+      child = element.lastElementChild;
+      element.removeChild(child);
+    }
   }
-
 }
 
 function winCondition(){
     modal.style.display="block";
     finalScore(moves);
+    printFinalTime();
+    timerStop();
 }
 
 /*
- *function that keeps tracks of time. Activated by startTimer function
+ *function that keeps tracks of time. Activated by timeControll function
  */
 
 function timer(){
@@ -157,14 +178,24 @@ function timer(){
     sec += 1;
   }
   document.getElementById('timer').textContent = "Timer:    " + minute + ":" + sec;
-  console.log(minute+":"+sec);
 }
 
-function startTimer(active){
+function timerStart(active){
   if(!active){
-    setInterval(timer,1000);
+    stopWatch = setInterval(timer,1000);
   }
 }
+
+function timerStop(){
+  clearInterval(stopWatch);
+  minutes = 0;
+  sec = 0;
+}
+
+function printFinalTime(){
+  document.getElementById('finalTime').textContent = minute + ":" + sec;
+}
+
 
 
 
@@ -182,7 +213,7 @@ function startTimer(active){
 
 deck.addEventListener('click',function(e){
   if(e.target && e.target.matches("li.card")){
-    startTimer(timerActive);
+    timerStart(timerActive);
     timerActive = true;
     show_card();
     moves ++;
@@ -191,7 +222,12 @@ deck.addEventListener('click',function(e){
       match_maker(e.target, match_array)
     },500);e
   }
+});
 
+resetButton.addEventListener('click',function(e){
+  deleteBoard();
+  board_maker(shuffle(cards_array));
+  modal.style.display = "none";
 });
 
 span.onclick= function(){
